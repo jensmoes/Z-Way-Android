@@ -231,10 +231,12 @@ public class DevicesGridAdapter extends BaseAdapter {
         int value = 0;
         final  int min = Integer.valueOf(device.metrics.min);
         final int max = Integer.valueOf(device.metrics.max);
-        try {
-            value = Integer.valueOf(device.metrics.level);
-        } catch (NumberFormatException e) {
-            e.printStackTrace();
+        if(!device.metrics.level.equals("off")){
+            try {
+                value = Integer.valueOf(device.metrics.level);
+            } catch (NumberFormatException e) {
+                e.printStackTrace();
+            }
         }
 
         changeViewVisibility(holder.seekBar, isSeekBarVisible);
