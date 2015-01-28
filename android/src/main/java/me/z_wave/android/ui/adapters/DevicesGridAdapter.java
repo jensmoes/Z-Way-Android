@@ -228,20 +228,20 @@ public class DevicesGridAdapter extends BaseAdapter {
                 || deviceType == DeviceType.THERMOSTAT;
 
         holder.seekBar.setOnSeekBarChangeListener(null);
-        int value = 0;
-        final  int min = Integer.valueOf(device.metrics.min);
-        final int max = Integer.valueOf(device.metrics.max);
-        if(!device.metrics.level.equals("off")){
-            try {
-                value = Integer.valueOf(device.metrics.level);
-            } catch (NumberFormatException e) {
-                e.printStackTrace();
-            }
-        }
-
-        changeViewVisibility(holder.seekBar, isSeekBarVisible);
-        holder.seekBar.setMax(max-min);
         if(isSeekBarVisible){
+            int value = 0;
+            final  int min = Integer.valueOf(device.metrics.min);
+            final int max = Integer.valueOf(device.metrics.max);
+            if(!"off".equals(device.metrics.level)){
+                try {
+                    value = Integer.valueOf(device.metrics.level);
+                } catch (NumberFormatException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            holder.seekBar.setMax(max-min);
+
             try {
                 holder.seekBar.setProgress(value - min);
             } catch (NumberFormatException e) {
@@ -266,6 +266,7 @@ public class DevicesGridAdapter extends BaseAdapter {
                 }
             });
         }
+        changeViewVisibility(holder.seekBar, isSeekBarVisible);
     }
 
     private void prepareRgbView(ViewHolder holder, final Device device){
