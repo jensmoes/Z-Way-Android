@@ -185,11 +185,13 @@ public class DevicesGridAdapter extends BaseAdapter {
         changeViewVisibility(holder.switcher, isSwitcherVisible);
         if(isSwitcherVisible) {
             if(deviceType == DeviceType.DOORLOCK) {
-                holder.switcher.setTextOff("close");
+                holder.switcher.setTextOff("closed");
                 holder.switcher.setTextOn("open");
 
                 if(device.metrics.mode != null)
                     holder.switcher.setChecked(!device.metrics.mode.equalsIgnoreCase("close"));
+                else if(device.metrics.level != null)
+                    holder.switcher.setChecked(!device.metrics.level.equalsIgnoreCase("close"));
             } else {
                 holder.switcher.setTextOff("off");
                 holder.switcher.setTextOn("on");
@@ -201,27 +203,42 @@ public class DevicesGridAdapter extends BaseAdapter {
             holder.switcher.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    final String newState = ((Switch) v).isChecked()
-                            ? ((Switch) v).getTextOn().toString()
-                            : ((Switch) v).getTextOff().toString();
-
-                    if(device.deviceType == DeviceType.DOORLOCK){
-                        if(device.metrics.mode == null ||
-                                !device.metrics.mode.equalsIgnoreCase(newState)){
-                            device.metrics.mode = newState;
-                            mListener.onSwitchStateChanged(device);
-                        }
-                    } else {
-                        if(!device.metrics.level.equalsIgnoreCase(newState)){
-                            device.metrics.level = newState;
-                            mListener.onSwitchStateChanged(device);
-                        }
+                    if(setNewDeviceState(device,((Switch) v).isChecked())){
+                        mListener.onSwitchStateChanged(device);
                     }
                 }
             });
         }
     }
+    private String getDeviceOffCommand(final Device device){
+         return device.deviceType == DeviceType.DOORLOCK?"close":"off";
 
+    }
+    private String getDeviceOnCommand(final Device device){
+        return device.deviceType == DeviceType.DOORLOCK?"open":"on";
+
+    }
+    private boolean setNewDeviceState(final Device device, boolean switchChecked){
+        boolean isClosed;
+        if(device.metrics.level != null){
+            if(switchChecked ^ device.metrics.level.equals(getDeviceOnCommand(device))){
+                device.metrics.level = switchChecked?getDeviceOnCommand(device):getDeviceOffCommand(device);
+                return true;
+            }
+            return false;
+        }
+        else if(device.metrics.mode != null){
+            if(switchChecked ^ device.metrics.mode.equals(getDeviceOnCommand(device))){
+                device.metrics.mode = switchChecked?getDeviceOnCommand(device):getDeviceOffCommand(device);
+                return true;
+            }
+            return false;
+        }
+        else {
+            device.metrics.mode = switchChecked?getDeviceOnCommand(device):getDeviceOffCommand(device);
+            return true;
+        }
+    }
     private void prepareSeekBar(final ViewHolder holder, final Device device){
         final DeviceType deviceType = device.deviceType;
         final boolean isSeekBarVisible = deviceType == DeviceType.SWITCH_MULTILEVEL

@@ -123,9 +123,12 @@ public class ApiClient {
     }
 
     public void updateDevicesState(final Device updatedDevice) {
-        final String state = updatedDevice.deviceType == DeviceType.DOORLOCK
-                ? updatedDevice.metrics.mode : updatedDevice.metrics.level;
-
+        String state;
+        if (updatedDevice.deviceType == DeviceType.DOORLOCK && null != updatedDevice.metrics.mode){
+            state = updatedDevice.metrics.mode;//Use mode on doorlocks using mode
+        } else {
+            state = updatedDevice.metrics.level;//otherwise use level
+        }
         mAdaptor.create(UpdateDeviceRequest.class).updateDeviceSwitchState(updatedDevice.id, state);
     }
 
