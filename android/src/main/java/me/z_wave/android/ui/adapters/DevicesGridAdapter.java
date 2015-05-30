@@ -170,8 +170,16 @@ public class DevicesGridAdapter extends BaseAdapter {
                 || deviceType == DeviceType.THERMOSTAT;
 
         changeViewVisibility(holder.value, isValueVisible);
-        if(isValueVisible)
-            holder.value.setText(device.getValue());
+        if(isValueVisible) {
+            String value;
+            try{
+                value = String.format("%.1f",Float.valueOf(device.getValue()));
+            } catch (NumberFormatException e){
+                value = device.getValue();//Such a weird implementation this ZWay. Smells of JS
+            }
+            String text = String.format("%s %s",value,device.metrics.getScaleTitle());
+            holder.value.setText(text);
+        }
     }
 
     private void prepareSwitch(ViewHolder holder, final Device device){

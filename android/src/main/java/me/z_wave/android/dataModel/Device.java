@@ -127,7 +127,7 @@ public class Device implements Serializable{
     }
 
     public String getValue(){
-        return String.format("%s %s", metrics.level, metrics.getScaleTitle());
+        return metrics.level;
     }
 
     @Override

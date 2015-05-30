@@ -159,8 +159,12 @@ public class DatabaseDataProvider {
 
             stmt.bindString(1, Integer.toString(profile.id));
             stmt.bindString(2, Integer.toString(localProfileId));
-            stmt.bindString(3, profile.name);
-            stmt.bindString(4, profile.description);
+            if(null != profile.name){
+                stmt.bindString(3, profile.name);
+            }
+            if(null != profile.description){
+                stmt.bindString(4, profile.description);
+            }
             stmt.bindString(5, profilePositions);
 
             stmt.executeInsert();

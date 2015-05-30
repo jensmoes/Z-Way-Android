@@ -41,14 +41,14 @@ public class Metrics implements Serializable {
 
     //Camera metrics
     public String url;
-    public Boolean hasZoomIn;
-    public Boolean hasZoomOut;
-    public Boolean hasLeft;
-    public Boolean hasRight;
-    public Boolean hasUp;
-    public Boolean hasDown;
-    public Boolean hasOpen;
-    public Boolean hasClose;
+    public Boolean hasZoomIn = false;
+    public Boolean hasZoomOut = false;
+    public Boolean hasLeft = false;
+    public Boolean hasRight = false;
+    public Boolean hasUp = false;
+    public Boolean hasDown = false;
+    public Boolean hasOpen = false;
+    public Boolean hasClose = false;
 
     public String getScaleTitle() {
         return !TextUtils.isEmpty(scaleTitle) && !scaleTitle.equals("null") ? scaleTitle : "";
